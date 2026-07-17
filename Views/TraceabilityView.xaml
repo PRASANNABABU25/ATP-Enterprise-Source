@@ -1,0 +1,245 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.TraceabilityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <!-- Title -->
+            <RowDefinition Height="Auto" />
+            <!-- Tabs -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Traceability &amp; Audit" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,15" />
+
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
+            
+            <!-- TAB 1: Session History -->
+            <TabItem Header="ATP Sessions">
+                <Grid Margin="0,15,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Session List -->
+                    <Border Grid.Column="0" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,12,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="SESSIONS" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button x:Name="BtnRefreshSessions" Content="Refresh" Style="{StaticResource FluentButtonSecondary}" Width="70" Click="BtnRefreshSessions_Click"/>
+                            </StackPanel>
+                            
+                            <DataGrid Grid.Row="1" x:Name="GridSessions" Style="{StaticResource FluentDataGrid}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="Transparent" SelectionChanged="GridSessions_SelectionChanged">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding StartTime, StringFormat=\{0:MM/dd/yy HH:mm\}}" Width="1.5*"/>
+                                    <DataGridTextColumn Header="S/N" Binding="{Binding UnitSerialNumber}" Width="1.5*"/>
+                                    
+                                    <DataGridTemplateColumn Header="Result" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border CornerRadius="3" Padding="6,2" x:Name="Badge">
+                                                    <TextBlock Text="{Binding OverallResult}" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                                </Border>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding OverallResult}" Value="PASS">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusPassBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding OverallResult}" Value="FAIL">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusFailBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding OverallResult}" Value="ABORTED">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusWarnBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding OverallResult}" Value="PENDING">
+                                                        <Setter TargetName="Badge" Property="Background" Value="#3a3e4d"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Session Detail -->
+                    <Border Grid.Column="1" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="15">
+                        <Grid x:Name="PanelSessionDetail" Visibility="Hidden">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Text="SESSION DETAILS" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <!-- Metadata Header -->
+                            <Grid Grid.Row="1" Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="ID:" Foreground="{StaticResource TextSecondaryBrush}" Width="50"/>
+                                        <TextBlock x:Name="TxtDetId" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Procedure:" Foreground="{StaticResource TextSecondaryBrush}" Width="80"/>
+                                        <TextBlock x:Name="TxtDetProc" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Operator:" Foreground="{StaticResource TextSecondaryBrush}" Width="80"/>
+                                        <TextBlock x:Name="TxtDetOp" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Project:" Foreground="{StaticResource TextSecondaryBrush}" Width="50"/>
+                                        <TextBlock x:Name="TxtDetProj" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="Start:" Foreground="{StaticResource TextSecondaryBrush}" Width="50"/>
+                                        <TextBlock x:Name="TxtDetStart" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                                        <TextBlock Text="End:" Foreground="{StaticResource TextSecondaryBrush}" Width="50"/>
+                                        <TextBlock x:Name="TxtDetEnd" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            
+                            <!-- Detailed Results -->
+                            <DataGrid Grid.Row="2" x:Name="GridSessionTests" Style="{StaticResource FluentDataGrid}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="#1e1e1e">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Test ID" Binding="{Binding TestId}" Width="1*"/>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding TestName}" Width="2*"/>
+                                    <DataGridTextColumn Header="Measured" Binding="{Binding MeasuredValue}" Width="1.5*"/>
+                                    
+                                    <DataGridTemplateColumn Header="Outcome" Width="1*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border CornerRadius="3" Padding="6,2" x:Name="Badge">
+                                                    <TextBlock Text="{Binding Outcome}" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                                </Border>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Outcome}" Value="Pass">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusPassBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Outcome}" Value="Fail">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusFailBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Outcome}" Value="Skipped">
+                                                        <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusWarnBrush}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Outcome}" Value="Error">
+                                                        <Setter TargetName="Badge" Property="Background" Value="#b82525"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
+            <!-- TAB 2: Equipment Registry -->
+            <TabItem Header="Equipment Registry">
+                <Grid Margin="0,15,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="BtnAddEquipment" Content="Add Equipment" Style="{StaticResource FluentButton}" Width="120" Click="BtnAddEquipment_Click" Margin="0,0,10,0"/>
+                            <Button x:Name="BtnDeleteEquipment" Content="Remove Selected" Style="{StaticResource FluentButtonSecondary}" Width="120" Click="BtnDeleteEquipment_Click"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border Grid.Row="1" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <DataGrid x:Name="GridEquipment" Style="{StaticResource FluentDataGrid}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="Transparent">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding EquipmentId}" Width="1*"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
+                                <DataGridTextColumn Header="Mfg" Binding="{Binding Manufacturer}" Width="1*"/>
+                                <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="1*"/>
+                                <DataGridTextColumn Header="Serial" Binding="{Binding SerialNumber}" Width="1.5*"/>
+                                <DataGridTextColumn Header="Cal Due" Binding="{Binding CalibrationDueDate, StringFormat=\{0:MM/dd/yy\}}" Width="1*"/>
+                                
+                                <DataGridTemplateColumn Header="Cal Status" Width="1*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="3" Padding="6,2" x:Name="Badge">
+                                                <TextBlock Text="VALID" x:Name="TxtStatus" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsCalibrationValid}" Value="False">
+                                                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusFailBrush}"/>
+                                                    <Setter TargetName="TxtStatus" Property="Text" Value="EXPIRED"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsCalibrationValid}" Value="True">
+                                                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusPassBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsCalibrationExpiring}" Value="True">
+                                                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusWarnBrush}"/>
+                                                    <Setter TargetName="TxtStatus" Property="Text" Value="EXPIRING"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
+            <!-- TAB 3: Audit Trail -->
+            <TabItem Header="Audit Trail">
+                <Border Margin="0,15,0,0" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Text="IMMUTABLE AUDIT LOG" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Button x:Name="BtnRefreshAudit" Content="Refresh" Style="{StaticResource FluentButtonSecondary}" Width="70" Click="BtnRefreshAudit_Click"/>
+                        </StackPanel>
+                        
+                        <DataGrid Grid.Row="1" x:Name="GridAudit" Style="{StaticResource FluentDataGrid}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="Transparent">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat=\{0:MM/dd/yy HH:mm:ss\}}" Width="1.5*"/>
+                                <DataGridTextColumn Header="Actor" Binding="{Binding Actor}" Width="1*"/>
+                                <DataGridTextColumn Header="Event" Binding="{Binding EventType}" Width="1.5*"/>
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="3*"/>
+                                <DataGridTextColumn Header="Session ID" Binding="{Binding SessionId}" Width="2*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </TabItem>
+            
+        </TabControl>
+    </Grid>
+</UserControl>

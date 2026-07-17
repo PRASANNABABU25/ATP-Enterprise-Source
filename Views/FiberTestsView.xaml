@@ -1,0 +1,97 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.FiberTestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="UUT High-Speed Fiber/Copper Throughput" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,15" />
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Test Configuration Card -->
+            <Border Grid.Row="0" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16" Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="PROPRIETARY SOCKET DIAGNOSTIC ENGINE" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+                        <TextBlock Text="Starts local UDP listener and binds a high-speed payload transmitter." Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" Margin="0,0,0,5"/>
+                        <TextBlock x:Name="TxtClientConfig" Text="Target: 127.0.0.1:5002 | Duration: 10s | Size: 1400B" Foreground="#FFFFFF" FontSize="13" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" x:Name="BtnStart" Content="Start Socket Loop" Style="{StaticResource FluentButton}" Click="StartTest_Click" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <Button Grid.Column="2" x:Name="BtnStop" Content="Abort Test" Style="{StaticResource FluentButtonSecondary}" Click="StopTest_Click" VerticalAlignment="Center" IsEnabled="False"/>
+                </Grid>
+            </Border>
+
+            <!-- Real-Time Metrics & Canvas Chart -->
+            <Border Grid.Row="1" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="THROUGHPUT GRAPH OVER TIME (Mbps)" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <!-- Parametric Values Grid -->
+                    <UniformGrid Grid.Row="1" Columns="4" Rows="1" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="Tx Packets:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10"/>
+                            <TextBlock x:Name="TxtTxPackets" Text="0" Foreground="#FFFFFF" FontSize="15" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Rx Packets:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10"/>
+                            <TextBlock x:Name="TxtRxPackets" Text="0" Foreground="#FFFFFF" FontSize="15" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Checksum Errors:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10"/>
+                            <TextBlock x:Name="TxtCrcErrors" Text="0" Foreground="#FFFFFF" FontSize="15" FontWeight="Bold"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Average Mbps:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10"/>
+                            <TextBlock x:Name="TxtAverageMbps" Text="0.00 Mbps" Foreground="{StaticResource AccentBlueBrush}" FontSize="15" FontWeight="Bold"/>
+                        </StackPanel>
+                    </UniformGrid>
+
+                    <!-- Realtime throughput plot canvas -->
+                    <Border Grid.Row="2" Background="#0b0e14" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="4">
+                        <Grid>
+                            <!-- Background Grid Lines -->
+                            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Path Stroke="#121724" StrokeThickness="0.5" Data="M 0,30 L 1000,30 M 0,60 L 1000,60 M 0,90 L 1000,90 M 0,120 L 1000,120"/>
+                            </Canvas>
+                            <Canvas x:Name="ChartCanvas" ClipToBounds="True" Background="Transparent" SizeChanged="ChartCanvas_SizeChanged"/>
+                            <!-- Active stats overlay -->
+                            <TextBlock x:Name="TxtInstantSpeed" Text="0.00 Mbps" Foreground="#FFFFFF" FontSize="26" FontWeight="Bold" 
+                                       HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" Opacity="0.85"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

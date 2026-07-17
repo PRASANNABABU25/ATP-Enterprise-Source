@@ -1,0 +1,76 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.EthernetTestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="UUT Ethernet Controller Analysis" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,15" />
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Active Connection Details -->
+            <Border Grid.Row="0" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="PRIMARY LAN PORT SPECIFICATION" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,12"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Adapter Name:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                            <TextBlock x:Name="TxtNicName" Text="Loading..." Foreground="#FFFFFF" FontSize="15" FontWeight="SemiBold" Margin="0,2,0,10"/>
+
+                            <TextBlock Text="Physical MAC Address:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                            <TextBlock x:Name="TxtMac" Text="Loading..." Foreground="#FFFFFF" FontSize="15" FontWeight="SemiBold"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Negotiated Link Speed:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                            <TextBlock x:Name="TxtSpeed" Text="Loading..." Foreground="#FFFFFF" FontSize="15" FontWeight="SemiBold" Margin="0,2,0,10"/>
+
+                            <TextBlock x:Name="TxtNicStatus" Text="Link Active" Foreground="{StaticResource StatusPassBrush}" FontSize="14" FontWeight="Bold" Margin="0,15,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Packet Error Telemetry Grid -->
+            <Border Grid.Row="1" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="REAL-TIME ETH PACKET INTEGRITY COUNTERS" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,12"/>
+                    <DataGrid x:Name="GridEthStats" Style="{StaticResource FluentDataGrid}" Height="180">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Interface Name" Binding="{Binding Name}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Tx Bytes" Binding="{Binding SentBytes}" Width="*"/>
+                            <DataGridTextColumn Header="Rx Bytes" Binding="{Binding ReceivedBytes}" Width="*"/>
+                            <DataGridTextColumn Header="Rx Errors" Binding="{Binding ReceivedErrors}" Width="*"/>
+                            <DataGridTextColumn Header="Rx Discards" Binding="{Binding ReceivedDiscarded}" Width="*"/>
+                            <DataGridTextColumn Header="Tx Errors" Binding="{Binding SentErrors}" Width="*"/>
+                            <DataGridTextColumn Header="Tx Discards" Binding="{Binding SentDiscarded}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,70 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.LogsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="UUT Execution Data Logs Database" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,15" />
+
+        <!-- Logs Data Grid -->
+        <Border Grid.Row="1" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+            <DataGrid x:Name="GridLogs" Style="{StaticResource FluentDataGrid}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="90"/>
+                    <DataGridTextColumn Header="Test Name" Binding="{Binding Name}" Width="160"/>
+                    <DataGridTextColumn Header="Measured Value" Binding="{Binding MeasuredValue}" Width="*"/>
+                    <DataGridTextColumn Header="Specification Limit" Binding="{Binding Specification}" Width="*"/>
+                    <DataGridTextColumn Header="Tolerance" Binding="{Binding Tolerance}" Width="90"/>
+                    <!-- Custom Template for status badge -->
+                    <DataGridTemplateColumn Header="Verdict Status" Width="90">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="3" Padding="6,2" HorizontalAlignment="Left" Width="60">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="PASS">
+                                                    <Setter Property="Background" Value="{StaticResource StatusPassBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="FAIL">
+                                                    <Setter Property="Background" Value="{StaticResource StatusFailBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding Status}" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Command Bar -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Review log records before signing off on compliance verification certificates." Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Clear Logs Database" Style="{StaticResource FluentButtonSecondary}" Click="ClearLogs_Click" Margin="0,0,10,0"/>
+                <Button Content="Export Excel Grid (CSV)" Style="{StaticResource FluentButton}" Click="ExportExcel_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

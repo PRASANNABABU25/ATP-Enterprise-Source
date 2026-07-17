@@ -1,0 +1,151 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.TestExecutionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="900">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="ATP Execution Engine" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,10" />
+
+        <!-- Row 1: Engine Controls & Summary -->
+        <Border Grid.Row="1" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ComboBox x:Name="CmbProcedures" Width="200" Margin="0,0,10,0" SelectionChanged="CmbProcedures_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ProcedureTitle}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button x:Name="BtnStart" Content="Start Session" Style="{StaticResource FluentButton}" Click="Start_Click" Width="120" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnPause" Content="Pause" Style="{StaticResource FluentButtonSecondary}" Click="Pause_Click" Width="90" Margin="0,0,10,0" IsEnabled="False"/>
+                    <Button x:Name="BtnResume" Content="Resume" Style="{StaticResource FluentButtonSecondary}" Click="Resume_Click" Width="90" Margin="0,0,10,0" IsEnabled="False"/>
+                    <Button x:Name="BtnStop" Content="Stop" Style="{StaticResource FluentButtonSecondary}" Click="Stop_Click" Width="90" IsEnabled="False"/>
+                </StackPanel>
+
+                <!-- Summary Counters -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="#1a202c" CornerRadius="4" Padding="10,5" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="TOTAL:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtTotal" Text="0" Foreground="#FFFFFF" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#1a202c" CornerRadius="4" Padding="10,5" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="PASS:" Foreground="{StaticResource StatusPassBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtPass" Text="0" Foreground="#FFFFFF" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#1a202c" CornerRadius="4" Padding="10,5" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="FAIL:" Foreground="{StaticResource StatusFailBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtFail" Text="0" Foreground="#FFFFFF" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#1a202c" CornerRadius="4" Padding="10,5">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="SKIP:" Foreground="{StaticResource StatusWarnBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TxtSkip" Text="0" Foreground="#FFFFFF" FontSize="14" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Row 2: Queue and Current Test -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.5*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Test Queue DataGrid -->
+            <Border Grid.Column="0" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,12,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Text="ATP TEST SEQUENCE" Foreground="{StaticResource AccentBlueBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <DataGrid Grid.Row="1" x:Name="GridTestQueue" Style="{StaticResource FluentDataGrid}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Test ID" Binding="{Binding TestId}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="1.2*"/>
+                            <DataGridTextColumn Header="State" Binding="{Binding StateString}" Width="1*"/>
+                            
+                            <DataGridTemplateColumn Header="Outcome" Width="1*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="3" Padding="6,2" x:Name="Badge">
+                                            <TextBlock Text="{Binding OutcomeString}" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding OutcomeString}" Value="Pass">
+                                                <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusPassBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding OutcomeString}" Value="Fail">
+                                                <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusFailBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding OutcomeString}" Value="Skipped">
+                                                <Setter TargetName="Badge" Property="Background" Value="{StaticResource StatusWarnBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding OutcomeString}" Value="Error">
+                                                <Setter TargetName="Badge" Property="Background" Value="#b82525"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding OutcomeString}" Value="Pending">
+                                                <Setter TargetName="Badge" Property="Background" Value="#3a3e4d"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                            <DataGridTextColumn Header="Time" Binding="{Binding DurationString}" Width="0.8*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <!-- Current Test Execution Panel -->
+            <Border Grid.Column="1" Background="{StaticResource BgCardBrush}" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" CornerRadius="8" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="ACTIVE TEST MODULE" Foreground="{StaticResource AccentBlueBrush}" FontSize="11" FontWeight="Bold" Margin="0,0,0,12"/>
+                    
+                    <TextBlock x:Name="TxtActiveTestName" Text="No Active Test" Foreground="#FFFFFF" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="TxtActiveTestDesc" Text="-" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="STATUS" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,2"/>
+                    <TextBlock x:Name="TxtActiveTestState" Text="IDLE" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="SPECIFICATION" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold" Margin="0,0,0,2"/>
+                    <TextBlock x:Name="TxtActiveTestSpec" Text="-" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                    <ProgressBar x:Name="ProgressBar" Height="4" Minimum="0" Maximum="100" Value="0" Margin="0,20,0,0" Foreground="{StaticResource AccentBlueBrush}" Background="#1e2330" BorderThickness="0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

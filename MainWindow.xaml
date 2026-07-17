@@ -1,0 +1,293 @@
+<Window x:Class="atp_enterprise_app_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:atp_enterprise_app_wpf"
+        mc:Ignorable="d"
+        Title="ATP Enterprise System Compliance Console" 
+        Height="680" Width="1020"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgAppBrush}"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown">
+
+    <Window.Resources>
+        <!-- Page transition Storyboard -->
+        <Storyboard x:Key="PageTransition">
+            <DoubleAnimation Storyboard.TargetName="WorkspaceHost" Storyboard.TargetProperty="Opacity" 
+                             From="0" To="1" Duration="0:0:0.3" />
+            <DoubleAnimation Storyboard.TargetName="WorkspaceHost" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" 
+                             From="15" To="0" Duration="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <!-- Custom styled scrollbar-buttons and separators for Ribbon -->
+        <Style x:Key="RibbonSeparator" TargetType="Separator">
+            <Setter Property="Background" Value="{StaticResource BorderCardBrush}"/>
+            <Setter Property="Width" Value="1"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
+
+        <!-- Custom styled title bar buttons -->
+        <Style x:Key="TitleBarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Width" Value="35"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#17ffffff"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TitleBarButtonClose" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#b82525"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+
+    <Border BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1.5" CornerRadius="8" Background="Transparent" ClipToBounds="True">
+        <Grid>
+            <Grid.RowDefinitions>
+                <!-- Row 0: Custom Windows TitleBar -->
+                <RowDefinition Height="32"/>
+                <!-- Row 1: Ribbon Control Bar -->
+                <RowDefinition Height="64"/>
+                <!-- Row 2: Main Application Shell (Sidebar + ViewHost) -->
+                <RowDefinition Height="*"/>
+                <!-- Row 3: Bottom Status Bar -->
+                <RowDefinition Height="28"/>
+            </Grid.RowDefinitions>
+
+            <!-- Row 0: Custom TitleBar -->
+            <Border Grid.Row="0" Background="#0b0e14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                <Grid Margin="10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- App Icon / Title -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="10" Height="10" Fill="{StaticResource AccentBlueBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Text="ATP Compliance Console" Foreground="{StaticResource TextPrimaryBrush}" FontSize="11" FontWeight="SemiBold" FontFamily="{StaticResource TitleFont}"/>
+                        <TextBlock Text=" - OFFLINE DIAGNOSTICS" Foreground="{StaticResource TextMutedBrush}" FontSize="10" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Windows controls buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="—" Style="{StaticResource TitleBarButton}" Click="MinWin_Click"/>
+                        <Button Content="[ ]" Style="{StaticResource TitleBarButton}" Click="MaxWin_Click"/>
+                        <Button Content="✕" Style="{StaticResource TitleBarButtonClose}" Click="CloseWin_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Row 1: Ribbon Command Bar -->
+            <Border Grid.Row="1" Background="#111420" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1">
+                <Grid Margin="15,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Play Suite Button -->
+                        <Button Style="{StaticResource RibbonButton}" x:Name="BtnRunAll" Click="RunAll_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="▶" Foreground="#52c41a" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Run Auto ATP" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Abort Suite Button -->
+                        <Button Style="{StaticResource RibbonButton}" x:Name="BtnAbort" Click="Abort_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="■" Foreground="{StaticResource StatusFailBrush}" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Abort Suite" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Separator Style="{StaticResource RibbonSeparator}"/>
+
+                        <!-- LED Blink Button -->
+                        <Button Style="{StaticResource RibbonButton}" Click="BlinkLed_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="⚡" Foreground="{StaticResource StatusWarnBrush}" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Blink LED" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Storage Speed Test Button -->
+                        <Button Style="{StaticResource RibbonButton}" Click="QuickDisk_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="💾" Foreground="{StaticResource TextSecondaryBrush}" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Disk Test" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Separator Style="{StaticResource RibbonSeparator}"/>
+
+                        <!-- Export PDF Button -->
+                        <Button Style="{StaticResource RibbonButton}" Click="ExportPDF_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="📄" Foreground="{StaticResource AccentBlueBrush}" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Export PDF" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Export CSV Button -->
+                        <Button Style="{StaticResource RibbonButton}" Click="ExportCSV_Click">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="📊" Foreground="#52c41a" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Export CSV" FontSize="9" FontWeight="Bold" Margin="0,2,0,0" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Row 2: Sidebar Navigation & Workspace views host -->
+            <Grid Grid.Row="2" Background="{StaticResource BgWorkspaceBrush}">
+                <Grid.ColumnDefinitions>
+                    <!-- Column 0: Sidebar menu -->
+                    <ColumnDefinition Width="220"/>
+                    <!-- Column 1: Main View Host -->
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Sidebar Grid -->
+                <Border Grid.Column="0" Background="#0b0e14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,1,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Operator tag -->
+                        <Border Grid.Row="0" Background="#141822" Padding="12,10" Margin="10" CornerRadius="4">
+                            <StackPanel>
+                                <TextBlock Text="UUT STATION OPERATOR" Foreground="{StaticResource TextMutedBrush}" FontSize="9" FontWeight="Bold"/>
+                                <TextBlock x:Name="TxtOperatorTag" Text="OPERATOR-99" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Nav ListBox -->
+                        <ListBox Grid.Row="1" x:Name="LstNavigation" SelectionChanged="Navigation_SelectionChanged" 
+                                 Background="Transparent" BorderThickness="0" Margin="0,5">
+                            <ListBox.Resources>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                    <Setter Property="Padding" Value="15,10"/>
+                                    <Setter Property="Margin" Value="10,2"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#17ffffff"/>
+                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource AccentBlueBrush}"/>
+                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.Resources>
+                            <ListBoxItem Content="Dashboard"/>
+                            <ListBoxItem x:Name="NavItemInventory" Content="Hardware Discovery"/>
+                            <ListBoxItem x:Name="NavItemExecution" Content="ATP Execution"/>
+                            <ListBoxItem x:Name="NavItemFunctional" Content="Functional Tests" IsEnabled="False"/>
+                            <ListBoxItem x:Name="NavItemDisplay" Content="Display &amp; Touch" IsEnabled="False"/>
+                            <ListBoxItem x:Name="NavItemStorage" Content="Storage Volumes" IsEnabled="False"/>
+                            <ListBoxItem x:Name="NavItemComm" Content="Comm &amp; Serial" IsEnabled="False"/>
+                            <ListBoxItem x:Name="NavItemEthernet" Content="Ethernet Ports" IsEnabled="False"/>
+                            <ListBoxItem x:Name="NavItemNetworkPerf" Content="Network Performance"/>
+                            <ListBoxItem x:Name="NavItemFiber" Content="Fiber Throughput" IsEnabled="False" Visibility="Collapsed"/>
+                            <ListBoxItem x:Name="NavItemHealth" Content="Health Diagnostics" IsEnabled="False"/>
+                            <ListBoxItem Content="Test Logs Grid"/>
+                            <ListBoxItem Content="Enterprise Reports"/>
+                            <ListBoxItem Content="Threshold Limits"/>
+                            <ListBoxItem x:Name="NavItemProcedures" Content="Procedure Manager"/>
+                            <ListBoxItem x:Name="NavItemTraceability" Content="Traceability &amp; Audit"/>
+                        </ListBox>
+                    </Grid>
+                </Border>
+
+                <!-- Workspace active view host -->
+                <ContentControl Grid.Column="1" x:Name="WorkspaceHost" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                    <ContentControl.RenderTransform>
+                        <TranslateTransform Y="0"/>
+                    </ContentControl.RenderTransform>
+                </ContentControl>
+            </Grid>
+
+            <!-- Row 3: Bottom Status Bar -->
+            <Border Grid.Row="3" Background="#0b0e14" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0">
+                <Grid Margin="12,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Conn status -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                            <Ellipse Width="8" Height="8" Fill="#52c41a" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="WMI Core Native" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10.5" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <!-- Metadata tag -->
+                        <TextBlock x:Name="TxtStatusMetadata" Text="UUT S/N: SN-409714C | Project: PRJ-RUGGED-2026" Foreground="{StaticResource TextMutedBrush}" FontSize="10.5" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Verdict badge -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <TextBlock Text="UUT Verdict:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock x:Name="TxtOverallVerdict" Text="AWAITING TEST" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+
+
+</Window>

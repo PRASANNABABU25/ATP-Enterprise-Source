@@ -1,0 +1,99 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.OpticalTestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000"
+             Background="#1E1E1E">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="10G OPTICAL FIBER VALIDATION" Foreground="White" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Configuration Panel -->
+            <Border Background="#2D2D30" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Configuration" Foreground="White" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                    
+                    <TextBlock Text="Operating Mode:" Foreground="#CCCCCC" Margin="0,5,0,5"/>
+                    <ComboBox x:Name="CmbMode" Margin="0,0,0,15" Background="#3E3E42" Foreground="White" SelectedIndex="0">
+                        <ComboBoxItem Content="Target Mode (Listen)"/>
+                        <ComboBoxItem Content="Client Mode (Transmit)"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Target IP Address (Client Only):" Foreground="#CCCCCC" Margin="0,5,0,5"/>
+                    <TextBox x:Name="TxtIpAddress" Text="127.0.0.1" Background="#3E3E42" Foreground="White" Padding="5" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="TCP Port:" Foreground="#CCCCCC" Margin="0,5,0,5"/>
+                    <TextBox x:Name="TxtPort" Text="9000" Background="#3E3E42" Foreground="White" Padding="5" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Payload Size (Bytes):" Foreground="#CCCCCC" Margin="0,5,0,5"/>
+                    <TextBox x:Name="TxtPayload" Text="65536" Background="#3E3E42" Foreground="White" Padding="5" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Duration (Seconds):" Foreground="#CCCCCC" Margin="0,5,0,5"/>
+                    <TextBox x:Name="TxtDuration" Text="30" Background="#3E3E42" Foreground="White" Padding="5" Margin="0,0,0,25"/>
+
+                    <Button x:Name="BtnStart" Content="START TEST" Background="#007ACC" Foreground="White" Height="40" FontSize="16" FontWeight="Bold" Click="BtnStart_Click"/>
+                    <Button x:Name="BtnStop" Content="STOP TEST" Background="#CC3300" Foreground="White" Height="40" FontSize="16" FontWeight="Bold" Margin="0,10,0,0" IsEnabled="False" Click="BtnStop_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Live Dashboard -->
+            <Border Grid.Column="2" Background="#2D2D30" CornerRadius="8" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Live Telemetry Dashboard" Foreground="White" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Current Throughput" Foreground="#CCCCCC" FontSize="12"/>
+                            <TextBlock x:Name="TxtCurrentMbps" Text="0.00 Mbps" Foreground="#00FF00" FontSize="28" FontWeight="Bold"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Average Throughput" Foreground="#CCCCCC" FontSize="12"/>
+                            <TextBlock x:Name="TxtAvgMbps" Text="0.00 Mbps" Foreground="White" FontSize="28" FontWeight="Bold"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Data Transferred" Foreground="#CCCCCC" FontSize="12"/>
+                            <TextBlock x:Name="TxtTotalBytes" Text="0 MB" Foreground="White" FontSize="28" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2">
+                        <TextBlock Text="Diagnostics" Foreground="White" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="TxtPacketsSent" Text="Packets Sent: 0" Foreground="#CCCCCC" Margin="0,2,0,2"/>
+                        <TextBlock x:Name="TxtPacketsReceived" Text="Packets Received: 0" Foreground="#CCCCCC" Margin="0,2,0,2"/>
+                        <TextBlock x:Name="TxtDropped" Text="Dropped / Missing: 0" Foreground="#FF3333" Margin="0,2,0,2"/>
+                        <TextBlock x:Name="TxtCorrupted" Text="Corrupted / Checksum Fail: 0" Foreground="#FF3333" Margin="0,2,0,2"/>
+                        <TextBlock x:Name="TxtElapsed" Text="Elapsed Time: 00:00:00" Foreground="#CCCCCC" Margin="0,10,0,0"/>
+                        <TextBlock x:Name="TxtStatus" Text="Status: READY" Foreground="#007ACC" FontWeight="Bold" Margin="0,10,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

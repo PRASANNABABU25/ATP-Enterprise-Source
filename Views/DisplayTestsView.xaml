@@ -1,0 +1,80 @@
+<UserControl x:Class="atp_enterprise_app_wpf.Views.DisplayTestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="UUT Displays &amp; Digitizers Verification" 
+                   Foreground="{StaticResource TextPrimaryBrush}" 
+                   FontSize="22" 
+                   FontFamily="{StaticResource TitleFont}" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,15" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Control Card & Screen Stats -->
+            <Border Grid.Column="0" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16" Margin="0,0,10,0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="LCD PANEL SPECIFICATIONS" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,12"/>
+                    
+                    <TextBlock Text="Primary Screen Resolution:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                    <TextBlock x:Name="TxtResolution" Text="1920 x 1080" Foreground="#FFFFFF" FontSize="16" FontWeight="SemiBold" Margin="0,2,0,12"/>
+
+                    <TextBlock Text="Color Depth (Bits/Pixel):" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                    <TextBlock x:Name="TxtDepth" Text="32 Bits" Foreground="#FFFFFF" FontSize="16" FontWeight="SemiBold" Margin="0,2,0,20"/>
+
+                    <TextBlock Text="Dead Pixel Screen Cycler" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" Margin="0,0,0,4"/>
+                    <Button Content="Launch Pixel Cycler" Style="{StaticResource FluentButton}" Click="LaunchCycler_Click" Margin="0,0,0,15"/>
+                    
+                    <TextBlock Text="Note: Pixel cycler goes full-screen. Click to change color (Red, Green, Blue, White, Black). Press ESC to close." 
+                               Foreground="{StaticResource TextMutedBrush}" FontSize="10" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Interactive Digitizer Grid Card -->
+            <Border Grid.Column="1" Background="{StaticResource BgCardBrush}" 
+                    BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" 
+                    CornerRadius="8" Padding="16" Margin="10,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="TOUCH DIGITIZER CALIBRATION GRID" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <!-- 8x8 Painting grid -->
+                    <Border Grid.Row="1" Background="#0b0e14" BorderBrush="{StaticResource BorderCardBrush}" BorderThickness="1" Padding="5">
+                        <UniformGrid x:Name="DigitizerGrid" Columns="8" Rows="8" 
+                                     Background="Transparent" MouseMove="DigitizerGrid_MouseMove" MouseLeftButtonDown="DigitizerGrid_MouseLeftButtonDown"/>
+                    </Border>
+                    
+                    <Grid Grid.Row="2" Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Drag cursor over all cells to paint them green, verifying active touchscreen response." 
+                                   Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Clear Grid" Style="{StaticResource FluentButtonSecondary}" Click="ClearGrid_Click"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
