@@ -13,13 +13,10 @@ ATP (Acceptance Test Procedure) Enterprise is a comprehensive WPF (Windows Prese
 
 ## Screenshots
 
-*(Please replace these placeholder images with actual screenshots of your application)*
-
-| Dashboard | Network Performance |
+| Network Performance | CPU Temperature Monitor |
 | :---: | :---: |
-| ![Dashboard Dashboard](docs/screenshots/dashboard.png) | ![Network Performance](docs/screenshots/network_performance.png) |
-| **Optical Validation** | **Hardware Diagnostics** |
-| ![Optical Validation](docs/screenshots/optical_validation.png) | ![Hardware Diagnostics](docs/screenshots/hardware_diagnostics.png) |
+| ![Network Performance](docs/screenshots/network_performance.png) | ![CPU Temperature Monitor](docs/screenshots/cpu_temperature.png) |
+
 
 ## Project Structure
 
