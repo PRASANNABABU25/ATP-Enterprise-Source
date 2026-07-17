@@ -11,6 +11,16 @@ ATP (Acceptance Test Procedure) Enterprise is a comprehensive WPF (Windows Prese
 - **Test Automation & Execution**: Automated procedure loading, scheduling, and execution engine.
 - **Traceability & Reporting**: Comprehensive test logging, traceability database integration, and automated report generation.
 
+## Screenshots
+
+*(Please replace these placeholder images with actual screenshots of your application)*
+
+| Dashboard | Network Performance |
+| :---: | :---: |
+| ![Dashboard Dashboard](docs/screenshots/dashboard.png) | ![Network Performance](docs/screenshots/network_performance.png) |
+| **Optical Validation** | **Hardware Diagnostics** |
+| ![Optical Validation](docs/screenshots/optical_validation.png) | ![Hardware Diagnostics](docs/screenshots/hardware_diagnostics.png) |
+
 ## Project Structure
 
 - **Models/**: Core data structures representing tests, equipment, logs, and system metrics.
